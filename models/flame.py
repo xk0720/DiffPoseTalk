@@ -197,7 +197,7 @@ class FLAME(nn.Module):
             if eye_pose_params is None:
                 eye_pose_params = self.eye_pose.expand(batch_size, -1)
             head_pose = pose_params[:, :3] if not ignore_global_rot else torch.zeros_like(pose_params[:, :3])
-            # global transformation params: pose_params[:, :3]
+            # global transformation params (should be global rotation?): pose_params[:, :3]
             # jaw params: pose_params[:, 3:]
             full_pose = torch.cat(
                 [head_pose, self.neck_pose.expand(batch_size, -1), pose_params[:, 3:], eye_pose_params], dim=1)
