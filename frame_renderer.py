@@ -2,6 +2,7 @@ import argparse
 from functools import reduce
 from pathlib import Path
 import torch
+import numpy as np
 
 
 class Renderer:
@@ -46,28 +47,29 @@ class Renderer:
 
         return vert_list
 
-    def forward(self, params, ignore_global_rot=False):
-        # shape; exp; pose
-        coef_dict = NotImplemented
-
-        assert self.load_flame, 'FLAME model is not loaded'
-        verts_list = self.coef_dict_to_vertices(coef_dict, self.flame, self.rot_repr,
-                                                ignore_global_rot=ignore_global_rot).detach().cpu().numpy()
-
-    @torch.no_grad()
-    def infer_params(self):
-        pass
-
 
 def main(args):
-    pass
+    shape_coef = args.coef
+    if isinstance(shape_coef, (str, Path)):
+        shape_coef = np.load(shape_coef)
+        if not isinstance(shape_coef, np.ndarray):
+            shape_coef = shape_coef['shape']
+    if isinstance(shape_coef, np.ndarray):
+        shape_coef = torch.from_numpy(shape_coef).float().to(self.device)
+    assert shape_coef.ndim <= 2, 'Shape coefficient must be 1D or 2D tensor.'
+    if shape_coef.ndim > 1:
+        # use the first frame as the shape coefficient
+        shape_coef = shape_coef[0]
+
+    print(f"shape_coef shape: {shape_coef.shape}")
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Render FLAME Params"
     )
 
-    parser.add_argument("--flame_params_path", type=str, required=True, help="Path to FLAME params")
+    parser.add_argument('--coef', '-c', type=Path, required=True, help='path to the coefficients')
 
     args = parser.parse_args()
     main(args)
