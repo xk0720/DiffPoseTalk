@@ -55,7 +55,7 @@ def main(args):
         if not isinstance(shape_coef, np.ndarray):
             shape_coef = shape_coef['shape']
     if isinstance(shape_coef, np.ndarray):
-        shape_coef = torch.from_numpy(shape_coef).float().to(self.device)
+        shape_coef = torch.from_numpy(shape_coef).float()
     assert shape_coef.ndim <= 2, 'Shape coefficient must be 1D or 2D tensor.'
     if shape_coef.ndim > 1:
         # use the first frame as the shape coefficient
