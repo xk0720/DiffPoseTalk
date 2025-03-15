@@ -68,8 +68,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Render FLAME Params"
     )
-
     parser.add_argument('--coef', '-c', type=Path, required=True, help='path to the coefficients')
-
     args = parser.parse_args()
     main(args)
